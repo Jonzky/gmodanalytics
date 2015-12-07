@@ -1,0 +1,20 @@
+//Whitelist things
+
+INSERT INTO ac_whitelist (`detection_id`, `date_added`) 
+SELECT id as detection_id, UTC_TIMESTAMP() as date_added from `ac_detections` WHERE status=1 ON DUPLICATE KEY UPDATE ac_whitelist.id=ac_whitelist.id
+
+
+
+//
+SELECT type,value FROM `ac_whitelist` w LEFT JOIN ac_detections d ON d.id=w.detection_id WHERE `gamemode`='1'
+
+
+
+INSERT INTO ac_userlog (`userid`, `detectionid`, `status`, `date_added`) 
+SELECT 15640 as userid, detection_id, -1 as status, date_added from `ac_detections` WHERE status=-1 ON DUPLICATE KEY UPDATE ac_userlog .id= ac_userlog.id
+
+
+
+
+
+15640

@@ -48,10 +48,6 @@ local function update_map_played()
     qTab.cb = function(q, sdata)
        if not SkiWeb:checkQuery(q) then         
 
-            print("SDATA")
-            PrintTable(sdata)
-            print("SDATA")
-
             local qwe = {}
             qwe.cb = function(q,s)
                 mapid = q:lastInsert()
@@ -61,9 +57,7 @@ local function update_map_played()
             local formQuery = string.format(addNewMapQuery, mapname)            
             SkiWeb:query(formQuery, qwe)
         end 
-        print("SDATA")
-        PrintTable(sdata)
-        print("SDATA")
+
         local row = sdata[1];
         if row == nil then return end
 
@@ -187,5 +181,9 @@ function MuhVote(length, current, limit, prefix)
     end)
 end
 hook.Add("PostGamemodeLoaded", "SkiAnalytics - Map.Vote fix", function()
-    timer.Create("SkiAnalytics - My map vote", 30, 0, function() MapVote.Start = MuhVote end)
+    timer.Create("SkiAnalytics - My map vote", 30, 0, function() 
+        if MapVote then
+            MapVote.Start = MuhVote
+        end
+    end)
 end)

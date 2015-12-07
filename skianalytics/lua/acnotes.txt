@@ -1,0 +1,45 @@
+AC NOTES
+
+--Improved AC
+
+--Issues:
+	--Precent abuse?
+		--Before sending to the webserver:
+			--Check in with the server (lua)
+				--generate + save a random token
+
+			--Send token in request
+
+--Tables
+	--detections (id, type, value, path, func, status, gamemode, date_added)
+	--user_detections(id, userid, detection_id, date_added)
+
+	--detected_paths(id, path, status)
+
+	--whitelist (id, type, value status)
+
+	it type, name, value, path
+ 			--tokens_requested(id,userid,token,timestamp,status)
+		
+	--Push back far todo, stick with whitelisting atm
+		--blacklist  (id, d.id, )	
+		--hacks 	 id, 
+
+--PHP - GetWhitelist (on spawn)
+	--Takes a hash from the client, checks/updates the clients record
+		--Ensure to escape it
+	--Return json of whitelisted items
+
+
+--Flow
+
+	--Spawn:
+		--Update player, insert random hash into users row
+			--Send to client
+
+	--Client:
+		--Log everything but only keep a single copy 
+		--log_item(value):
+			--if log_item
+
+		--Preload

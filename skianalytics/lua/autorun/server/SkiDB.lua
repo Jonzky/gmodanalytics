@@ -1,27 +1,54 @@
 require( "mysqloo" )
 
 include("mapvotes.lua")
+include("sv_screenshots.lua")
+include("sv_serverinfo.lua")
+include("play_times.lua")
 include("skianalytics.lua")
 
 SkiWeb = {}
+
 SkiWeb.ServerID = nil
-//Game server address in the format IP:Port
-SkiWeb.ServerAddress = ""
-//Gamemode id, choose your own (e.g. TTT = 1)
-SkiWeb.Gamemode = 1
+//TTT = 1
+SkiWeb.Gamemode = 99
 
 SkiWeb.Host = ""
 SkiWeb.Username = ""
 SkiWeb.Password = ""
 SkiWeb.Database_name = ""
 SkiWeb.Database_port = 3306
-
-//Dont touch
 SkiWeb.connected = false;
+
+SkiWeb.STATUS_READY    = mysqloo.DATABASE_CONNECTED;
+SkiWeb.STATUS_WORKING  = mysqloo.DATABASE_CONNECTING;
+SkiWeb.STATUS_OFFLINE  = mysqloo.DATABASE_NOT_CONNECTED;
+SkiWeb.STATUS_ERROR    = mysqloo.DATABASE_INTERNAL_ERROR;
 SkiWeb.dbqueue = {}
+
+
+function game.ProcessIP( hostip )
+    local ip = {}
+    ip[ 1 ] = bit.rshift( bit.band( hostip, 0xFF000000 ), 24 )
+    ip[ 2 ] = bit.rshift( bit.band( hostip, 0x00FF0000 ), 16 )
+    ip[ 3 ] = bit.rshift( bit.band( hostip, 0x0000FF00 ), 8 )
+    ip[ 4 ] = bit.band( hostip, 0x000000FF )
+ 
+    return table.concat( ip, "." ) .. ":" .. GetConVarString( "hostport" )
+end
+
+function game.GetLocalIP()
+    local hostip = GetConVarString( "hostip" ) -- GetConVarNumber is inaccurate
+    hostip = tonumber( hostip )
+    return game.ProcessIP( hostip )
+end
+
+hook.Add("")
+
 
 function SkiWeb:connectToDatabase()
 	
+	SkiWeb.ServerAddress = game.GetLocalIP()
+
 	print("[SkiWeb] Trying to connect to the database") 
 
 	SkiWeb.db = mysqloo.connect(SkiWeb.Host, SkiWeb.Username, SkiWeb.Password, SkiWeb.Database_name, SkiWeb.Database_port)
